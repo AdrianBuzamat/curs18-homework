@@ -28,15 +28,15 @@ public class CountryService {
     public Optional<String> getCapitalByID(int id) {
         return countries.stream()
                 .filter(p -> p.id() == id)
-                .map(Country::capital)
-                .findFirst();
+                .findFirst()
+                .map(Country::capital);
     }
 
     public Optional<Long> getPopulationByID(int id) {
         return countries.stream()
                 .filter(p -> p.id() == id)
-                .map(Country::population)
-                .findFirst();
+                .findFirst()
+                .map(Country::population);
     }
 
     public List<Country> getCountriesByContinent(String continent) {
@@ -48,19 +48,22 @@ public class CountryService {
     public Optional<List<String>> allCountryNeighboursByID(int id) {
         return countries.stream()
                 .filter(p -> p.id() == id)
-                .map(Country::neighbours)
-                .findAny();
+                .findAny()
+                .map(Country::neighbours);
     }
-//- get countries in <continent> with population larger than <population> : /continents/<continentName>/countries?minPopulation=<minimum population> -> returns list of Country objects
-public List<Country> getCountriesFromContinentByPopulation(String continent, long minPopulation) {
-    return countries.stream()
-            .filter(p -> p.continent().equalsIgnoreCase(continent))
-            .filter(p -> p.population()>minPopulation)
-            .collect(Collectors.toList());
-}
-//- get countries that neighbor X but not neighbor Y :
-// /countries?includeNeighbour=<includedNeighbourCode>&excludeNeighbour=<excludedNeighbourCode>
-// -> returns list of Country objects
 
+    public List<Country> getCountriesFromContinentByPopulation(String continent, long minPopulation) {
+        return countries.stream()
+                .filter(p -> p.continent().equalsIgnoreCase(continent))
+                .filter(p -> p.population() > minPopulation)
+                .collect(Collectors.toList());
+    }
+
+    public List<Country> getNeighboursBySelection(String includedNeighbour, String excludedNeighbour) {
+        return countries.stream()
+                .filter(p -> p.neighbours().contains(includedNeighbour))
+                .filter(p -> !p.neighbours().contains(excludedNeighbour))
+                .collect(Collectors.toList());
+    }
 }
 
